@@ -28,7 +28,7 @@ function Sidebar() {
           </Link>
         </li>
         <li className="py-4">
-          <Link to="/admin/admins">
+          <Link to="/admin/admin">
           <FontAwesomeIcon icon={faUserTie}  className="mr-2" /> Admins
           </Link>
         </li>

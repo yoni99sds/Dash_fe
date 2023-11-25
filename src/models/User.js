@@ -1,35 +1,37 @@
-// userModel.js
-const db = require('./db'); // Import your database connection
+const API_BASE_URL = '/api';
 
-const User = {};
+async function fetchUsers() {
+  const response = await fetch(`${API_BASE_URL}/users`);
+  return response.json();
+}
 
-User.getAll = () => {
-  return db.promise().query('SELECT * FROM users');
-};
+async function addUser(newUser) {
+  const response = await fetch(`${API_BASE_URL}/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(newUser),
+  });
+  return response.json();
+}
 
-User.getById = (id) => {
-  return db.promise().query('SELECT * FROM users WHERE id = ?', [id]);
-};
+async function updateUser(editedUser) {
+  const response = await fetch(`${API_BASE_URL}/users/${editedUser.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(editedUser),
+  });
+  return response.json();
+}
 
-User.create = (user) => {
-  return db.promise().query('INSERT INTO users (fullName, email, password) VALUES (?, ?, ?)', [
-    user.fullName,
-    user.email,
-    user.password,
-  ]);
-};
+async function deleteUser(userId) {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+    method: 'DELETE',
+  });
+  return response.json();
+}
 
-User.update = (id, user) => {
-  return db.promise().query('UPDATE users SET fullName = ?, email = ?, password = ? WHERE id = ?', [
-    user.fullName,
-    user.email,
-    user.password,
-    id,
-  ]);
-};
-
-User.delete = (id) => {
-  return db.promise().query('DELETE FROM users WHERE id = ?', [id]);
-};
-
-module.exports = User;
+export { fetchUsers, addUser, updateUser, deleteUser };

@@ -2,107 +2,127 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import AdminProfileDropdown from './AdminProfileDropdown';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { fetchInfluencers, addInfluencer, deleteInfluencer, updateInfluencer } from '../../models/Influencer';
 function InfluencerPage() {
   const history = useHistory();
-  const [influencers, setInfluencers] = useState([
-    { id: 1, name: 'Influencer 1', referralCode: 'REF123', promoCode: 'PROMO456' },
-    { id: 2, name: 'Influencer 2', referralCode: 'REF456', promoCode: 'PROMO789' },
-    // Add more sample data
-  ]);
+  const [influencers, setInfluencers] = useState([]);
   const [newInfluencer, setNewInfluencer] = useState({
+    id: '',
     name: '',
-    referralCode: '',
-    promoCode: '',
+    username: '',
+    password: '',
+    referral_link: '',
+    promo_codes: '',
+    created_at: '',
+    updated_at: '',
   });
-
   const [editingInfluencer, setEditingInfluencer] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [adminUser] = useState({
     name: 'Admin User',
-    profilePicture: '/admin.png', 
+    profilePicture: '/admin.png',
   });
+
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); 
-    // Then, redirect to the login page
-  
+    localStorage.removeItem('authToken');
     history.push('/');
   };
+
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(max-width: 768px)'); // Adjust the max-width as needed
+    // Fetch influencers from the backend when the component mounts
+    fetchInfluencers()
+      .then((data) => setInfluencers(data))
+      .catch((error) => console.error('Error fetching influencers:', error));
+
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
 
     const handleMediaQueryChange = (e) => {
       if (e.matches) {
-        setSidebarOpen(false); // Close sidebar in mobile view
+        setSidebarOpen(false);
       } else {
-        setSidebarOpen(true); // Open sidebar in larger screens
+        setSidebarOpen(true);
       }
     };
 
-    // Add event listener to handle media query changes
     mediaQuery.addEventListener('change', handleMediaQueryChange);
 
-    // Initial check of media query and set sidebar state accordingly
     if (mediaQuery.matches) {
       setSidebarOpen(false);
     } else {
       setSidebarOpen(true);
     }
 
-    // Cleanup the event listener when the component unmounts
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange);
     };
   }, []);
 
   const handleAddInfluencer = () => {
-    // Add a new influencer
-    if (newInfluencer.name && newInfluencer.referralCode) {
-      setInfluencers([...influencers, newInfluencer]);
-      setNewInfluencer({
-        name: '',
-        referralCode: '',
-        promoCode: '',
-      });
+    if (newInfluencer.name && newInfluencer.referral_link) {
+      // Set the role_id to 2 for influencers
+      newInfluencer.role_id = 2;
+
+      addInfluencer(newInfluencer)
+        .then((data) => {
+          setInfluencers([...influencers, data]);
+          setNewInfluencer({
+            id: '',
+            name: '',
+            username: '',
+            password: '',
+            referral_link: '',
+            promo_codes: '',
+            created_at: '',
+            updated_at: '',
+          });
+        })
+        .catch((error) => {
+          console.error('Error adding influencer:', error);
+        });
     }
   };
-
   const handleEditInfluencer = (influencer) => {
-    // Set the influencer to be edited
-    setEditingInfluencer(influencer);
+    setEditingInfluencer({ ...influencer });
   };
 
   const handleUpdateInfluencer = () => {
-    // Update the influencer
     if (editingInfluencer) {
-      const updatedInfluencers = influencers.map((influencer) =>
-        influencer.id === editingInfluencer.id ? editingInfluencer : influencer
-      );
-      setInfluencers(updatedInfluencers);
-      setEditingInfluencer(null);
+      updateInfluencer(editingInfluencer.id, editingInfluencer)
+        .then((data) => {
+          const updatedInfluencers = influencers.map((inf) => (inf.id === editingInfluencer.id ? data : inf));
+          setInfluencers(updatedInfluencers);
+          setEditingInfluencer(null);
+        })
+        .catch((error) => {
+          console.error('Error updating influencer:', error);
+        });
     }
   };
 
   const handleDeleteInfluencer = (influencerId) => {
-    // Delete the influencer
-    const updatedInfluencers = influencers.filter((influencer) => influencer.id !== influencerId);
-    setInfluencers(updatedInfluencers);
+    deleteInfluencer(influencerId)
+      .then(() => {
+        const updatedInfluencers = influencers.filter((inf) => inf.id !== influencerId);
+        setInfluencers(updatedInfluencers);
+      })
+      .catch((error) => {
+        console.error('Error deleting influencer:', error);
+      });
   };
 
   return (
     <div className="flex">
       {sidebarOpen && <Sidebar isExpanded={sidebarOpen} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />}
       <div className={`flex-1 p-10 main-content ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
-      <div className="absolute top-0 right-0 m-4">
-      <AdminProfileDropdown user={adminUser} onLogout={handleLogout} />
-</div>
+        <div className="absolute top-0 right-0 m-4">
+          <AdminProfileDropdown user={adminUser} onLogout={handleLogout} />
+        </div>
         <button className="block md:hidden" onClick={() => setSidebarOpen(!sidebarOpen)}>
           {sidebarOpen ? (
-            // Use a different icon for when the sidebar is open
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 m-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           ) : (
-            // Use a different icon for when the sidebar is closed
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 m-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
@@ -114,19 +134,33 @@ function InfluencerPage() {
 
           <div className="table-responsive-mobile" style={{ overflowX: 'auto', maxHeight: '400px' }}>
             <table className="min-w-full table-auto border-collapse">
-              <thead>
-                <tr>
-                  <th className="border border-gray-300 py-2 px-4">Id</th>
-                  <th className="border border-gray-300 py-2 px-4">Name</th>
-                  <th className="border border-gray-300 py-2 px-4">Referral Code</th>
-                  <th className="border border-gray-300 py-2 px-4">Promo Code</th>
-                  <th className="border border-gray-300 py-2 px-4">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
+            <thead>
+              <tr>
+                <th className="border border-gray-300 py-2 px-4">Id</th>
+                <th className="border border-gray-300 py-2 px-4">Name</th>
+                <th className="border border-gray-300 py-2 px-4">Username</th>
+                <th className="border border-gray-300 py-2 px-4">Password</th>
+                <th className="border border-gray-300 py-2 px-4">Referral Link</th>
+                <th className="border border-gray-300 py-2 px-4">Promo Code</th>
+                <th className="border border-gray-300 py-2 px-4">Created At</th>
+                <th className="border border-gray-300 py-2 px-4">Updated At</th>
+                <th className="border border-gray-300 py-2 px-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
                 {influencers.map((influencer) => (
                   <tr key={influencer.id}>
-                    <td className="border border-gray-300 py-2 px-4"></td>
+                    <td className="border border-gray-300 py-2 px-4">
+                    {editingInfluencer === influencer ? (
+                        <input
+                          type="text"
+                          value={editingInfluencer.id}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, id: e.target.value })}
+                        />
+                      ) : (
+                        influencer.id
+                      )}
+                    </td>
                     <td className="border border-gray-300 py-2 px-4">
                       {editingInfluencer === influencer ? (
                         <input
@@ -138,27 +172,71 @@ function InfluencerPage() {
                         influencer.name
                       )}
                     </td>
-
                     <td className="border border-gray-300 py-2 px-4">
                       {editingInfluencer === influencer ? (
                         <input
                           type="text"
-                          value={editingInfluencer.referralCode}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, referralCode: e.target.value })}
+                          value={editingInfluencer.username}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, username: e.target.value })}
                         />
                       ) : (
-                        influencer.referralCode
+                        influencer.username
                       )}
                     </td>
                     <td className="border border-gray-300 py-2 px-4">
                       {editingInfluencer === influencer ? (
                         <input
                           type="text"
-                          value={editingInfluencer.promoCode || ''}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, promoCode: e.target.value })}
+                          value={editingInfluencer.password}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, password: e.target.value })}
                         />
                       ) : (
-                        influencer.promoCode || 'N/A'
+                        influencer.password
+                      )}
+                    </td>
+
+                    <td className="border border-gray-300 py-2 px-4">
+                      {editingInfluencer === influencer ? (
+                        <input
+                          type="text"
+                          value={editingInfluencer.referralLink}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, referral_link: e.target.value })}
+                        />
+                      ) : (
+                        influencer.referral_link
+                      )}
+                    </td>
+                    <td className="border border-gray-300 py-2 px-4">
+                      {editingInfluencer === influencer ? (
+                        <input
+                          type="text"
+                          value={editingInfluencer.promo_codes}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, promo_codes: e.target.value })}
+                        />
+                      ) : (
+                        influencer.promo_codes 
+                      )}
+                    </td>
+                    <td className="border border-gray-300 py-2 px-4">
+                      {editingInfluencer === influencer ? (
+                        <input
+                          type="text"
+                          value={editingInfluencer.created_at}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, created_at: e.target.value })}
+                        />
+                      ) : (
+                        influencer.created_at
+                      )}
+                    </td>
+                    <td className="border border-gray-300 py-2 px-4">
+                      {editingInfluencer === influencer ? (
+                        <input
+                          type="text"
+                          value={editingInfluencer.updated_at}
+                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, updated_at: e.target.value })}
+                        />
+                      ) : (
+                        influencer.updated_at
                       )}
                     </td>
                     <td className="border border-gray-300 py-2 px-4">
@@ -192,18 +270,32 @@ function InfluencerPage() {
               onChange={(e) => setNewInfluencer({ ...newInfluencer, name: e.target.value })}
               className="border border-gray-300 py-2 px-4 mb-2"
             />
+             <input
+              type="text"
+              placeholder="Username"
+              value={newInfluencer.username}
+              onChange={(e) => setNewInfluencer({ ...newInfluencer, username: e.target.value })}
+              className="border border-gray-300 py-2 px-4 mb-2"
+            />
+             <input
+              type="text"
+              placeholder="Password"
+              value={newInfluencer.password}
+              onChange={(e) => setNewInfluencer({ ...newInfluencer, password: e.target.value })}
+              className="border border-gray-300 py-2 px-4 mb-2"
+            />
             <input
               type="text"
-              placeholder="Referral Code"
-              value={newInfluencer.referralCode}
-              onChange={(e) => setNewInfluencer({ ...newInfluencer, referralCode: e.target.value })}
+              placeholder="Referral Link" 
+              value={newInfluencer.referral_link}
+              onChange={(e) => setNewInfluencer({ ...newInfluencer, referral_link: e.target.value })}
               className="border border-gray-300 py-2 px-4 mb-2"
             />
             <input
               type="text"
               placeholder="Promo Code"
-              value={newInfluencer.promoCode || ''}
-              onChange={(e) => setNewInfluencer({ ...newInfluencer, promoCode: e.target.value })}
+              value={newInfluencer.promo_codes}
+              onChange={(e) => setNewInfluencer({ ...newInfluencer, promo_codes: e.target.value })}
               className="border border-gray-300 py-2 px-4 mb-2"
             />
             <button onClick={handleAddInfluencer} className="bg-green-800 text-white py-2 px-8  rounded hover:bg-blue-600">

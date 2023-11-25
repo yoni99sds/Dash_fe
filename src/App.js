@@ -1,30 +1,80 @@
 // src/App.js
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux'; // Import Provider for Redux
-import store from './store'; // Import your Redux store
+import { Provider } from 'react-redux';
+import store from './store';
 import Login from './components/Auth/Login';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import PrivateRoute from './components/Auth/PrivateRoute'; 
 import InfluencerPerformancePage from './components/Admin/InfluencerPerformancePage';
 import InfluencerPage from './components/Admin/InfluencerPage';
 import PatientStatusPage from './components/Admin/PatientStatusPage';
 import UserPage from './components/Admin/UserPage';
 import PatientPage from './components/Admin/PatientPage';
 import AdminPage from './components/Admin/AdminPage';
+import InfluencerDashboard from './components/Influencer/InfluencerDashboard';
+import InfluencerPerformance from './components/Influencer/InfluencerPerformance';
+import InfluencerRegistrations from './components/Influencer/InfluencerRegistrations';
+
 function App() {
+  const [isAuthenticated, setAuthenticated] = useState(false);
+
   return (
     <Provider store={store}>
       <Router>
         <Switch>
-          <Route exact path="/" component={Login} />
-          <Route path="/admin/dashboard" component={AdminDashboard} />
-          <Route path="/admin/influencer-performance" component={InfluencerPerformancePage} />
-          <Route path="/admin/influencers" component={InfluencerPage} />
-          <Route path="/admin/patient-status" component={PatientStatusPage} />
-          <Route path="/admin/users" component= {UserPage} />
-        <Route path="/admin/patients" component={PatientPage }/>
-        <Route path="/admin/admins" component={AdminPage}/>
-     
+          <Route
+            exact
+            path="/"
+            render={(props) => <Login {...props} setAuthenticated={setAuthenticated} />}
+          />
+         
+          <PrivateRoute
+            path="/admin/dashboard"
+            component={AdminDashboard}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path="/admin/influencer-performance"
+            component={InfluencerPerformancePage}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path="/admin/influencers"
+            component={InfluencerPage}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path="/admin/patient-status"
+            component={PatientStatusPage}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute path="/admin/users"
+          component={UserPage} 
+          isAuthenticated={isAuthenticated} />
+          <PrivateRoute
+            path="/admin/patients"
+            component={PatientPage}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute path="/admin/admin" 
+          component={AdminPage} 
+          isAuthenticated={isAuthenticated} />
+          <PrivateRoute
+            path="/influencer/dashboard"
+            component={InfluencerDashboard}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path="/influencer/performance"
+            component={InfluencerPerformance}
+            isAuthenticated={isAuthenticated}
+          />
+          <PrivateRoute
+            path="/influencer/registrations"
+            component={InfluencerRegistrations}
+            isAuthenticated={isAuthenticated}
+          />
         </Switch>
       </Router>
     </Provider>

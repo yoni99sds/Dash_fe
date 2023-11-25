@@ -1,26 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import { Switch} from 'react-router-dom';
-import InfluencerPerformancePage from './InfluencerPerformancePage';
-import PatientStatusPage from './PatientStatusPage';
-// import AdminProfileDropdown from './AdminProfileDropdown'; 
-// import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-function AdminDashboard() {
-  // const history = useHistory();
+import { Switch } from 'react-router-dom';
+import InfluencerPerformance from './InfluencerPerformance';
+import InfluencerSidebar from './InfluencerSidebar';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import InfluencerProfileDropdown from './InfluencerProfileDropdown';
+
+function InfluencerDashboard() {
+  const history = useHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [influencerUser] = useState({
+    name: 'Influencer',
+    profilePicture: '/admin.png', 
+  });
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
-
-  // const handleLogout = () => {
-  //   localStorage.removeItem('authToken'); 
-  //   // Then, redirect to the login page
-  
-  //   history.push('/');
-  // };
-
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    history.push('/');
+  };
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 768px)');
@@ -43,22 +43,19 @@ function AdminDashboard() {
       setSidebarOpen(true);
     }
 
-    // Cleanup the event listener when the component unmounts
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange);
     };
   }, []);
 
   return (
-   
     <div className="flex">
-      
-      {sidebarOpen && <Sidebar isExpanded={sidebarOpen} toggleSidebar={toggleSidebar} />}
+      {sidebarOpen && <InfluencerSidebar isExpanded={sidebarOpen} toggleSidebar={toggleSidebar} />}
       <div className={`flex-1 p-10 main-content ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
-      <div className="absolute top-0 right-0 m-4">
-      {/* <AdminProfileDropdown user={adminUser} onLogout={handleLogout} /> */}
-</div>
-      
+        <div className="absolute top-0 right-0 m-4">
+          <InfluencerProfileDropdown influencer={influencerUser} onLogout={handleLogout} />
+        </div>
+
         <button className="block md:hidden" onClick={toggleSidebar}>
           {sidebarOpen ? (
             // Use a different icon for when the sidebar is open
@@ -72,15 +69,13 @@ function AdminDashboard() {
             </svg>
           )}
         </button>
-        <div> <PatientStatusPage/></div>
-        <InfluencerPerformancePage/>
-        
-        <Switch>
-        
-        </Switch>
+
+        <InfluencerPerformance />
+
+        <Switch></Switch>
       </div>
     </div>
   );
 }
 
-export default AdminDashboard;
+export default InfluencerDashboard;

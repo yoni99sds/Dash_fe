@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function AdminProfileDropdown({ user, onLogout }) { 
+function InfluencerProfileDropdown({ influencer, onLogout }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -15,11 +15,11 @@ function AdminProfileDropdown({ user, onLogout }) {
           className="flex items-center text-blue-700 hover:text-green-800"
         >
           <img
-            src={user.profilePicture}
-            alt="Admin Profile"
+            src={influencer.profilePicture}
+            alt="Influencer Profile"
             className="w-8 h-8 rounded-full"
           />
-          <span className="ml-2">{user.name}</span>
+          <span className="ml-2">{influencer.name}</span>
           <svg
             className="ml-2 h-5 w-5 text-white"
             xmlns="http://www.w3.org/2000/svg"
@@ -68,4 +68,4 @@ function AdminProfileDropdown({ user, onLogout }) {
   );
 }
 
-export default AdminProfileDropdown;
+export default InfluencerProfileDropdown;
