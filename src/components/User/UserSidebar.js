@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { faHospitalUser } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-const InfluencerSidebar = () => {
+const UserSidebar = () => {
     const [isExpanded, setIsExpanded] = useState(true);
 
     const toggleSidebar = () => {
@@ -19,15 +19,15 @@ const InfluencerSidebar = () => {
       <i className={`fa ${isExpanded ? 'fa-chevron-left' : 'fa-bars'} text-xl`}></i>
     </button>
     <ul className="px-4">
-    <li className="py-4  hover:bg-black">
-      <Link to="/influencer/dashboard/:id">
-        <FontAwesomeIcon icon={faHome} className="mr-2 " /> Dashboard
+    <li className="py-4">
+      <Link to="">
+        <FontAwesomeIcon icon={faHome} className="mr-2" /> User Dashboard
       </Link>
     </li>
 
     <li className="py-4">
-      <Link to="/influencer/registrations">
-      <FontAwesomeIcon icon={faHospitalUser}  className="mr-2" /> Registred Users
+      <Link to="/patient/registration">
+      <FontAwesomeIcon icon={faHospitalUser}  className="mr-2" /> Register a Patient
       </Link>
     </li>
 
@@ -37,4 +37,4 @@ const InfluencerSidebar = () => {
   );
 };
 
-export default InfluencerSidebar;
+export default UserSidebar;

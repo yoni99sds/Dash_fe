@@ -133,7 +133,7 @@ function UserPage() {
                     <th className="border border-gray-300 py-2 px-4">Id</th>
                     <th className="border border-gray-300 py-2 px-4">Name</th>
                     <th className="border border-gray-300 py-2 px-4">Username</th>
-                    <th className="border border-gray-300 py-2 px-4">Password</th>
+              
                     <th className="border border-gray-300 py-2 px-4">Actions</th>
                   </tr>
                 </thead>
@@ -165,17 +165,7 @@ function UserPage() {
                             user.username
                           )}
                         </td>
-                        <td className="border border-gray-300 py-2 px-4">
-                          {editingUser && editingUser.id === user.id ? (
-                            <input
-                              type="text"
-                              value={editingUser.password}
-                              onChange={(e) => setEditingUser({ ...editingUser, password: e.target.value })}
-                            />
-                          ) : (
-                            user.password
-                          )}
-                        </td>
+                 
                         <td className="border border-gray-300 py-2 px-4">
                           {editingUser && editingUser.id === user.id ? (
                             <button onClick={handleUpdateUser} className="text-blue-600 hover:underline">

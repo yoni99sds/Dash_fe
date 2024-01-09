@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import AdminProfileDropdown from './AdminProfileDropdown';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-import { fetchInfluencers, addInfluencer, deleteInfluencer, updateInfluencer } from '../../models/Influencer';
+import {getInfluencers, addInfluencer, deleteInfluencer, updateInfluencer } from '../../models/Influencer';
+
 function InfluencerPage() {
   const history = useHistory();
   const [influencers, setInfluencers] = useState([]);
@@ -10,9 +11,7 @@ function InfluencerPage() {
     id: '',
     name: '',
     username: '',
-    password: '',
-    referral_link: '',
-    promo_codes: '',
+  
     created_at: '',
     updated_at: '',
   });
@@ -29,8 +28,7 @@ function InfluencerPage() {
   };
 
   useEffect(() => {
-    // Fetch influencers from the backend when the component mounts
-    fetchInfluencers()
+    getInfluencers()
       .then((data) => setInfluencers(data))
       .catch((error) => console.error('Error fetching influencers:', error));
 
@@ -58,8 +56,7 @@ function InfluencerPage() {
   }, []);
 
   const handleAddInfluencer = () => {
-    if (newInfluencer.name && newInfluencer.referral_link) {
-      // Set the role_id to 2 for influencers
+    if (newInfluencer.name) {
       newInfluencer.role_id = 2;
 
       addInfluencer(newInfluencer)
@@ -69,11 +66,9 @@ function InfluencerPage() {
             id: '',
             name: '',
             username: '',
-            password: '',
-            referral_link: '',
-            promo_codes: '',
-            created_at: '',
-            updated_at: '',
+        
+            createdAt: '',
+            updatedAt: '',
           });
         })
         .catch((error) => {
@@ -81,6 +76,7 @@ function InfluencerPage() {
         });
     }
   };
+
   const handleEditInfluencer = (influencer) => {
     setEditingInfluencer({ ...influencer });
   };
@@ -134,24 +130,22 @@ function InfluencerPage() {
 
           <div className="table-responsive-mobile" style={{ overflowX: 'auto', maxHeight: '400px' }}>
             <table className="min-w-full table-auto border-collapse">
-            <thead>
-              <tr>
-                <th className="border border-gray-300 py-2 px-4">Id</th>
-                <th className="border border-gray-300 py-2 px-4">Name</th>
-                <th className="border border-gray-300 py-2 px-4">Username</th>
-                <th className="border border-gray-300 py-2 px-4">Password</th>
-                <th className="border border-gray-300 py-2 px-4">Referral Link</th>
-                <th className="border border-gray-300 py-2 px-4">Promo Code</th>
-                <th className="border border-gray-300 py-2 px-4">Created At</th>
-                <th className="border border-gray-300 py-2 px-4">Updated At</th>
-                <th className="border border-gray-300 py-2 px-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
+              <thead>
+                <tr>
+                  <th className="border border-gray-300 py-2 px-4">Id</th>
+                  <th className="border border-gray-300 py-2 px-4">Name</th>
+                  <th className="border border-gray-300 py-2 px-4">Username</th>
+                  
+                  <th className="border border-gray-300 py-2 px-4">Created At</th>
+                  <th className="border border-gray-300 py-2 px-4">Updated At</th>
+                  <th className="border border-gray-300 py-2 px-4">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
                 {influencers.map((influencer) => (
                   <tr key={influencer.id}>
                     <td className="border border-gray-300 py-2 px-4">
-                    {editingInfluencer === influencer ? (
+                      {editingInfluencer === influencer ? (
                         <input
                           type="text"
                           value={editingInfluencer.id}
@@ -183,46 +177,20 @@ function InfluencerPage() {
                         influencer.username
                       )}
                     </td>
-                    <td className="border border-gray-300 py-2 px-4">
-                      {editingInfluencer === influencer ? (
-                        <input
-                          type="text"
-                          value={editingInfluencer.password}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, password: e.target.value })}
-                        />
-                      ) : (
-                        influencer.password
-                      )}
-                    </td>
+               
 
                     <td className="border border-gray-300 py-2 px-4">
                       {editingInfluencer === influencer ? (
                         <input
                           type="text"
-                          value={editingInfluencer.referralLink}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, referral_link: e.target.value })}
-                        />
-                      ) : (
-                        influencer.referral_link
-                      )}
-                    </td>
-                    <td className="border border-gray-300 py-2 px-4">
-                      {editingInfluencer === influencer ? (
-                        <input
-                          type="text"
-                          value={editingInfluencer.promo_codes}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, promo_codes: e.target.value })}
-                        />
-                      ) : (
-                        influencer.promo_codes 
-                      )}
-                    </td>
-                    <td className="border border-gray-300 py-2 px-4">
-                      {editingInfluencer === influencer ? (
-                        <input
-                          type="text"
-                          value={editingInfluencer.created_at}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, created_at: e.target.value })}
+                          value={
+                            editingInfluencer.created_at
+                              ? new Date(editingInfluencer.created_at).toISOString()
+                              : ''
+                          }
+                          onChange={(e) =>
+                            setEditingInfluencer({ ...editingInfluencer, createdAt: e.target.value })
+                          }
                         />
                       ) : (
                         influencer.created_at
@@ -232,8 +200,14 @@ function InfluencerPage() {
                       {editingInfluencer === influencer ? (
                         <input
                           type="text"
-                          value={editingInfluencer.updated_at}
-                          onChange={(e) => setEditingInfluencer({ ...editingInfluencer, updated_at: e.target.value })}
+                          value={
+                            editingInfluencer.updatedAt
+                              ? new Date(editingInfluencer.updatedAt).toISOString()
+                              : ''
+                          }
+                          onChange={(e) =>
+                            setEditingInfluencer({ ...editingInfluencer, updatedAt: e.target.value })
+                          }
                         />
                       ) : (
                         influencer.updated_at
@@ -270,34 +244,21 @@ function InfluencerPage() {
               onChange={(e) => setNewInfluencer({ ...newInfluencer, name: e.target.value })}
               className="border border-gray-300 py-2 px-4 mb-2"
             />
-             <input
+            <input
               type="text"
               placeholder="Username"
               value={newInfluencer.username}
               onChange={(e) => setNewInfluencer({ ...newInfluencer, username: e.target.value })}
               className="border border-gray-300 py-2 px-4 mb-2"
             />
-             <input
+            <input
               type="text"
               placeholder="Password"
               value={newInfluencer.password}
               onChange={(e) => setNewInfluencer({ ...newInfluencer, password: e.target.value })}
               className="border border-gray-300 py-2 px-4 mb-2"
             />
-            <input
-              type="text"
-              placeholder="Referral Link" 
-              value={newInfluencer.referral_link}
-              onChange={(e) => setNewInfluencer({ ...newInfluencer, referral_link: e.target.value })}
-              className="border border-gray-300 py-2 px-4 mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Promo Code"
-              value={newInfluencer.promo_codes}
-              onChange={(e) => setNewInfluencer({ ...newInfluencer, promo_codes: e.target.value })}
-              className="border border-gray-300 py-2 px-4 mb-2"
-            />
+
             <button onClick={handleAddInfluencer} className="bg-green-800 text-white py-2 px-8  rounded hover:bg-blue-600">
               Add
             </button>

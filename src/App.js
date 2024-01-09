@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -15,7 +14,14 @@ import AdminPage from './components/Admin/AdminPage';
 import InfluencerDashboard from './components/Influencer/InfluencerDashboard';
 import InfluencerPerformance from './components/Influencer/InfluencerPerformance';
 import InfluencerRegistrations from './components/Influencer/InfluencerRegistrations';
-
+import UserDashboard from "./components/User/UserDashboard"
+import PromoCodeForm from './components/Admin/PromoCodeForm';
+import ReferralLinkForm from './components/Admin/ReferralLinkForm';
+import ReferralLinksList from './components/Admin/ReferralLinksList';
+import PromoCodes from './components/Admin/PromoCodes';
+import Signup from './components/Auth/SignUp';
+import PatientRegistration from './components/User/PatientRegistration';
+import PatientsPage from './components/User/PatientsPage';
 function App() {
   const [isAuthenticated, setAuthenticated] = useState(false);
 
@@ -28,7 +34,11 @@ function App() {
             path="/"
             render={(props) => <Login {...props} setAuthenticated={setAuthenticated} />}
           />
-         
+          <Route
+            path="/signup"
+            component={Signup}
+            isAuthenticated={isAuthenticated}
+          />
           <PrivateRoute
             path="/admin/dashboard"
             component={AdminDashboard}
@@ -44,29 +54,60 @@ function App() {
             component={InfluencerPage}
             isAuthenticated={isAuthenticated}
           />
+
+          <PrivateRoute path="/create-promo-code" 
+          component={PromoCodeForm}
+           isAuthenticated={isAuthenticated} />
+          
+          <PrivateRoute path="/promo-codes-list" 
+          component={PromoCodes}
+           isAuthenticated={isAuthenticated} />
+          
+          <PrivateRoute path="/referral-links" 
+          component={ReferralLinksList}
+          isAuthenticated={isAuthenticated} />
+          
+          <PrivateRoute path="/create-referral-link" 
+          component={ReferralLinkForm}
+          isAuthenticated={isAuthenticated} />
+
           <PrivateRoute
             path="/admin/patient-status"
             component={PatientStatusPage}
             isAuthenticated={isAuthenticated}
           />
+
           <PrivateRoute path="/admin/users"
           component={UserPage} 
           isAuthenticated={isAuthenticated} />
+          
           <PrivateRoute
             path="/admin/patients"
             component={PatientPage}
             isAuthenticated={isAuthenticated}
           />
+          <PrivateRoute
+            path="/patient/registration"
+            component={PatientRegistration}
+            isAuthenticated={isAuthenticated}
+          />
+            <PrivateRoute
+            path="/user/patients"
+            component={PatientsPage}
+            isAuthenticated={isAuthenticated}
+          />
           <PrivateRoute path="/admin/admin" 
           component={AdminPage} 
           isAuthenticated={isAuthenticated} />
+          
           <PrivateRoute
-            path="/influencer/dashboard"
-            component={InfluencerDashboard}
-            isAuthenticated={isAuthenticated}
+          path="/influencer/dashboard/:id"  
+          component={InfluencerDashboard}
+          isAuthenticated={isAuthenticated}
           />
+         
           <PrivateRoute
-            path="/influencer/performance"
+            path="/influencer/performance/:id" 
             component={InfluencerPerformance}
             isAuthenticated={isAuthenticated}
           />
@@ -75,6 +116,12 @@ function App() {
             component={InfluencerRegistrations}
             isAuthenticated={isAuthenticated}
           />
+          <PrivateRoute
+            path="/user/dashboard"
+            component={UserDashboard}
+            isAuthenticated={isAuthenticated}
+          />
+        
         </Switch>
       </Router>
     </Provider>

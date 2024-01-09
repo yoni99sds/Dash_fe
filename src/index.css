@@ -7,7 +7,7 @@
 /* Apply overflow settings to prevent content overflow */
 /* Apply a maximum width to the sidebar */
 .sidebar {
-  height: 99rem;
+  height: 58rem;
   max-width: 250px; /* Adjust the max-width as needed */
   transition: max-width 0.2s ease; /* Add a transition for smooth collapsing/expanding */
 }
@@ -47,27 +47,39 @@ img, video {
   max-width: 400px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+.bor2{
+  border-radius: 2rem ;
+  padding: 5rem ;
+  box-shadow: 12px 12px 25px 1px rgb(190, 190, 190);;
+}
 .bor
 {
   border-radius: 2rem;
-  padding: 12rem 5rem 12rem 5rem;
-
-
+  padding: 10rem 5rem 10rem 5rem;
   box-shadow: 12px 12px 25px 1px rgb(190, 190, 190);;
+
+ 
 }
 .flex-1.p-10.main-content.ml-64 {
   overflow: hidden;
  
 }
+
+button, [role="button"] {
+
+  padding: 0 26px 0 0;
+}
+
 .p-4 {
-  padding: 0rem;
+  padding: 1rem;
 }
 .text-gray-600 {
   
   padding: 0 0rem 0 1rem;
 }
-
+.m{
+  padding: 0 0rem 0 3rem;
+}
 .fa-2x{
   padding: 1rem 0 0 0 ;
 }
@@ -101,25 +113,61 @@ h1.text-2xl.font-bold.mb-4 {
 .bg-green-800 {
 margin: 1rem;
 }
+
 @media(max-width:1500px)
 {
   h1.text-2xl.font-bold.mb-4 {
     padding: 5rem 0 0 20rem;
   }
+  .mrrr{
+    padding: 0.5rem 0 0 0rem;
+  }
+
 }
+@media(min-width:1600px){
+  .lg\:w-full {
+    width: 59%;
+    height: 57rem;
+}
+
+}
+@media (min-width: 1024px){
+.lg\:w-full {
+    width: 59%;
+    height: 50rem;
+}}
 @media(max-width:990px)
 {
   
   h1.text-2xl.font-bold.mb-4 {
     padding: 5rem 0 0 3rem;
   }
+  .bor{
+  
+    height: 40rem;
+  }
 
+}
+@media(min-width:912px)
+{
+  .sidebar {
+    height: 85rem;}
+}
+@media(max-width:650px)
+{
+  .sidebar
+  {
+    height: 99rem;
+    
+      max-width: 205px;
+  }
 }
 @media (max-width:590px)
 {
   
   .bor{
     padding: 5rem ;
+    height: 40rem;
   }
 }
 @media(max-width:390px){
@@ -130,5 +178,48 @@ margin: 1rem;
  
     width: 9rem;
   }
+  .px-8 {
+    padding-left: 10px;
+    padding-right: 1rem;
+}
+.m {
+  padding: 23px 0rem 32px 1rem;
+}
+.justify-between{
+  padding: 0 6px 0 0 
+}
+}
+@media(min-width:320px){
+  .text-black {
 
+    padding: 24px 0 0px 0rem;
+   
+  }
+  .bor2 {
+    border-radius: 2rem;
+    padding: 2rem;
+    box-shadow: 12px 12px 25px 1px rgb(190, 190, 190);
+}
+}
+@media(max-width:320px)
+{
+  
+
+  .bor{
+    padding:0 20px 0 20px;
+    border-radius: 2rem;
+    height: 30rem;
+  }
+  .flex
+  {
+    overflow: hidden;
+  }
+  .px-8 {
+    padding-left: 1rem;
+    padding-right: 0rem;
+}
+
+.mrr{
+  padding:3rem;
+}
 }

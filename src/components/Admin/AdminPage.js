@@ -133,7 +133,7 @@ function AdminPage() {
                 <th className="border border-gray-300 py-2 px-4">Id</th>
                 <th className="border border-gray-300 py-2 px-4">Name</th>
                 <th className="border border-gray-300 py-2 px-4">Username</th>
-                <th className="border border-gray-300 py-2 px-4">Password</th>
+           
       
                 <th className="border border-gray-300 py-2 px-4">Actions</th>
               </tr>
@@ -174,17 +174,7 @@ function AdminPage() {
                         admin.username
                       )}
                     </td>
-                    <td className="border border-gray-300 py-2 px-4">
-                      {editingAdmin === admin ? (
-                        <input
-                          type="text"
-                          value={editingAdmin.password}
-                          onChange={(e) => setEditingAdmin({ ...editingAdmin, password: e.target.value })}
-                        />
-                      ) : (
-                        admin.password
-                      )}
-                    </td>
+          
            
                     <td className="border border-gray-300 py-2 px-4">
                       {editingAdmin === admin ? (

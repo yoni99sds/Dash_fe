@@ -1,4 +1,4 @@
-// auth.js
+
 import axios from 'axios';
 
 const BASE_URL = '/api/auth';
@@ -13,6 +13,11 @@ const authenticateUser = async ({ username, password }) => {
       const role = decodedToken.role;
       const id = decodedToken.id;
 
+      // Store the decoded token in session storage
+      sessionStorage.setItem('token', token);
+      sessionStorage.setItem('id', id);
+      console.log('Stored token:', token);
+      console.log('Stored Id:', id);
       return { success: true, role, id };
     } else {
       return { success: false, message: response.data.message || 'Authentication failed.' };
@@ -24,6 +29,24 @@ const authenticateUser = async ({ username, password }) => {
 };
 
 
+const registerUser = async ({ name, username, password, influencerId, promoCodeId }) => {
+  try {
+    const response = await fetch(`${BASE_URL}/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, username, password, influencerId, promoCodeId }),
+    });
+    
+    return await response.json();
+    
+  } catch (error) {
+    console.error('Error registering user:', error);
+    throw error;
+  }
+};
+
 const decodeJWT = (token) => {
   try {
     return JSON.parse(atob(token.split('.')[1]));
@@ -33,4 +56,4 @@ const decodeJWT = (token) => {
   }
 };
 
-export { authenticateUser };
+export { authenticateUser, registerUser };

@@ -1,39 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
-import { Switch} from 'react-router-dom';
-import InfluencerPerformancePage from './InfluencerPerformancePage';
-import PatientStatusPage from './PatientStatusPage';
-import AdminProfileDropdown from './AdminProfileDropdown'; 
+import { Switch } from 'react-router-dom';
+import UserSidebar from './UserSidebar';
+import UserProfileDropdown from './UserProfileDropdown';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
-function AdminDashboard() {
+function UserDashboard() {
   const history = useHistory();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [adminUser] = useState({
-    name: 'admin',
+  const [User] = useState({
+    name: 'User',
     profilePicture: '/admin.png', 
   });
-
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
 
   const handleLogout = () => {
-    localStorage.removeItem('authToken'); 
-    // Then, redirect to the login page
-  
+    localStorage.removeItem('authToken');
     history.push('/');
   };
-
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 768px)');
 
     const handleMediaQueryChange = (e) => {
       if (e.matches) {
-        setSidebarOpen(false); // Close sidebar in mobile view
+        setSidebarOpen(false); 
       } else {
-        setSidebarOpen(true); // Open sidebar in larger screens
+        setSidebarOpen(true); 
       }
     };
 
@@ -47,22 +41,18 @@ function AdminDashboard() {
       setSidebarOpen(true);
     }
 
-    // Cleanup the event listener when the component unmounts
     return () => {
       mediaQuery.removeEventListener('change', handleMediaQueryChange);
     };
   }, []);
 
   return (
-   
     <div className="flex">
-      
-      {sidebarOpen && <Sidebar isExpanded={sidebarOpen} toggleSidebar={toggleSidebar} />}
-      <div className={`flex-1 p-10 main-content ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
+    {sidebarOpen && <UserSidebar isExpanded={sidebarOpen} toggleSidebar={toggleSidebar} />}
+    <div className={`flex-1 p-10 main-content ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
       <div className="absolute top-0 right-0 m-4">
-      <AdminProfileDropdown user={adminUser} onLogout={handleLogout} />
+        <UserProfileDropdown influencer={User} onLogout={handleLogout} />
       </div>
-      
         <button className="block md:hidden" onClick={toggleSidebar}>
           {sidebarOpen ? (
             // Use a different icon for when the sidebar is open
@@ -76,15 +66,12 @@ function AdminDashboard() {
             </svg>
           )}
         </button>
-        <div> <PatientStatusPage/></div>
-        <InfluencerPerformancePage/>
-        
-        <Switch>
-        
-        </Switch>
+
+
+        <Switch></Switch>
       </div>
     </div>
   );
 }
 
-export default AdminDashboard;
+export default UserDashboard;

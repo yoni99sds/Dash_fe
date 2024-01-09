@@ -1,8 +1,12 @@
-const fetchInfluencers = async () => {
+
+const getInfluencers = async () => {
   const response = await fetch('/api/influencers');
   const data = await response.json();
   return data;
 };
+ // Adjust the API URL based on your backend
+
+
 
 const addInfluencer = async (newInfluencer) => {
   const response = await fetch('/api/influencers', {
@@ -34,4 +38,4 @@ const deleteInfluencer = async (id) => {
   });
 };
 
-export { fetchInfluencers, addInfluencer, updateInfluencer, deleteInfluencer };
+export { getInfluencers, addInfluencer, updateInfluencer, deleteInfluencer };

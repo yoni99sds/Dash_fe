@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function AdminProfileDropdown({ user, onLogout }) { 
+function UserProfileDropdown({ influencer, onLogout }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -12,14 +12,14 @@ function AdminProfileDropdown({ user, onLogout }) {
       <div>
         <button
           onClick={toggleDropdown}
-          className="flex items-center text-black hover:text-blue-800"
+          className="flex items-center text-blue-700 hover:text-green-800"
         >
           <img
-            src={user.profilePicture}
-            alt="Admin Profile"
+            src={influencer.profilePicture}
+            alt="Influencer Profile"
             className="w-8 h-8 rounded-full"
           />
-          <span className="ml-2">{user.name}</span>
+          <span className="ml-2">{influencer.name}</span>
           <svg
             className="ml-2 h-5 w-5 text-white"
             xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +27,11 @@ function AdminProfileDropdown({ user, onLogout }) {
             fill="currentColor"
             aria-hidden="true"
           >
-          
+            <path
+              fillRule="evenodd"
+              d="M12 19a1 1 0 01-1-1v-7a1 1 0 112 0v7a1 1 0 01-1 1zM5.293 7.293a1 1 0 011.414-1.414L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clipRule="evenodd"
+            />
           </svg>
         </button>
       </div>
@@ -64,4 +68,4 @@ function AdminProfileDropdown({ user, onLogout }) {
   );
 }
 
-export default AdminProfileDropdown;
+export default UserProfileDropdown;

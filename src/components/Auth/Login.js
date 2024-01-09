@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { authenticateUser} from '../../models/auth';
+import { useHistory, Link } from 'react-router-dom';
+import { authenticateUser } from '../../models/auth';
+
 function Login({ setAuthenticated }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -16,16 +17,16 @@ function Login({ setAuthenticated }) {
       if (response.success) {
         const { id, role } = response;
         setAuthenticated(true); // Update authentication status
-        // You can now use the role information for further actions
+
 
         console.log('User Role:', role);
 
         // Redirect based on the user's role
-        if (role === 'admin') {
+        if (role === 'Admin') {
           history.push(`/admin/dashboard/${id}`);
-        } else if (role === 'influencer') {
+        } else if (role === 'Influencers') {
           history.push(`/influencer/dashboard/${id}`);
-        } else if (role === 'user') {
+        } else if (role === 'Users') {
           history.push(`/user/dashboard/${id}`);
         }
       } else {
@@ -48,7 +49,7 @@ function Login({ setAuthenticated }) {
   return (
     <div className="login-page">
       <div className="flex justify-center items-center h-screen">
-        <div className="border bg-white text-white max-w-lg lg:w-full">
+        <div className="bor border bg-white text-white max-w-lg lg:w-full">
           <div className="logo-container">
             <img src="/netlix.png" alt="Netflix Logo" className="w-32 h-32 mx-auto mt-4 mb-4" />
           </div>
@@ -78,15 +79,21 @@ function Login({ setAuthenticated }) {
                 placeholder="Enter your password"
               />
             </div>
-            <div className="text-center p-8">
+            <div className="text-right  p-2">
+              <Link to="/signup" className="text-blue-400  hover:text-blue-700">
+                Sign Up
+              </Link>
+            </div>
+            <div className="text-center py-10 p-2">
               <button
                 type="button"
-                className="bg-green-400 hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                className="bg-green-400  hover:bg-blue-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 onClick={handleLogin}
               >
                 Login
               </button>
             </div>
+          
           </form>
         </div>
       </div>
